@@ -1,0 +1,31 @@
+function postmastery_smtp($arguments, $message) {
+    $body = [];
+    $body["type"] = "SMTP";
+    $body["hostname"] = gethostname();
+    $body["eventid"] = uuid();
+    $body["messageid"] = $message["id"]["transaction"].":".$message["id"]["queue"];
+    if ($message["jobid"]) $body["jobid"] = $message["jobid"];
+    $body["ts_attempt"] = $arguments["attempt"]["duration"] ? (time() - $arguments["attempt"]["duration"]) : time();
+    $body["ts_received"] = $message["ts"];
+    $body["status"] = (!$arguments["attempt"]["result"] and !$arguments["attempt"]["error"]) ? "removed" : ($arguments["action"] === "DELETE" or $arguments["action"] === "BOUNCE") ? "failed" : $arguments["action"] === "QUEUE" ? "delayed" : "delivered";
+    if ($arguments["attempt"]["result"]) {
+        $body["result_code"] = $arguments["attempt"]["result"]["code"];
+        $body["result_enhanced"] = array_join($arguments["attempt"]["result"]["enhanced"], ".");
+        $body["result_reason"] = array_join($arguments["attempt"]["result"]["reason"], "\n");
+        $body["result_state"] = $arguments["attempt"]["result"]["state"];
+    }
+    if ($arguments["attempt"]["error"]) {
+        $body["error_temporary"] = $arguments["attempt"]["error"]["temporary"];
+        $body["error_message"] = $arguments["attempt"]["error"]["message"];
+    }
+    if ($arguments["attempt"]["connection"]) {
+        if ($arguments["attempt"]["connection"]["localip"]) $body["connection_localip"] = $arguments["attempt"]["connection"]["localip"];
+        if ($arguments["attempt"]["connection"]["remoteip"]) $body["connection_remoteip"] = $arguments["attempt"]["connection"]["remoteip"];
+        if ($arguments["attempt"]["connection"]["remotemx"]) $body["connection_remotemx"] = $arguments["attempt"]["connection"]["remotemx"];
+    }
+    $body["sender"] = $message["sender"];
+    $body["recipient_localpart"] = $message["recipientaddress"]["localpart"];
+    $body["recipient_domain"] = $message["recipientaddress"]["domain"];
+    $body["size"] = $message["size"];
+    return $body;
+}
