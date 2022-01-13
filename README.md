@@ -12,9 +12,9 @@ An associative array of the SMTP delivery result.
 
 **Example**
 
-You can combine this function with our [httpbulk](https://github.com/halon-extras/httpbulk) plugin to send over the results reliably and in bulk to Postmastery.
+You can combine this function with our [http-bulk](https://github.com/halon-extras/http-bulk) plugin to send over the results reliably and in bulk to Postmastery.
 
-***httpbulk configuration***
+***http-bulk configuration***
 
 ```
 queues:
@@ -36,5 +36,5 @@ You need to replace `<datasetID>` and `<apiKey>` with your own values.
 ```
 import { postmastery_smtp } from "modules/postmastery/postmastery.hsl";
 $result = postmastery_smtp($arguments, $message);
-httpbulk("postmastery", json_encode($result));
+http_bulk("postmastery", json_encode($result));
 ```
