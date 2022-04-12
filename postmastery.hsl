@@ -29,7 +29,7 @@ function postmastery_smtp($arguments, $message, $redact = false) {
         if ($arguments["attempt"]["connection"]["remotemx"]) $body["connection_remotemx"] = $arguments["attempt"]["connection"]["remotemx"];
     }
     $body["sender"] = $message["sender"];
-    $body["recipient_localpart"] = $redact ? "*****" : $message["recipientaddress"]["localpart"];
+    if (!$redact) $body["recipient_localpart"] = $message["recipientaddress"]["localpart"];
     $body["recipient_domain"] = $message["recipientaddress"]["domain"];
     $body["size"] = $message["size"];
     return $body;
