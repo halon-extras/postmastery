@@ -1,4 +1,9 @@
-function postmastery_smtp($arguments, $message) {
+function replace_localpart($str)
+{
+    return pcre_replace(''([^\s<]+)@([a-zA-Z0-9-.]{3,})'', "*****@$2", $str);
+}
+
+function postmastery_smtp($arguments, $message, $redact = false) {
     $body = [];
     $body["type"] = "SMTP";
     $body["hostname"] = gethostname();
@@ -11,7 +16,7 @@ function postmastery_smtp($arguments, $message) {
     if ($arguments["attempt"]["result"]) {
         $body["result_code"] = $arguments["attempt"]["result"]["code"];
         $body["result_enhanced"] = array_join($arguments["attempt"]["result"]["enhanced"], ".");
-        $body["result_reason"] = array_join($arguments["attempt"]["result"]["reason"], "\n");
+        $body["result_reason"] = $redact ? replace_localpart(array_join($arguments["attempt"]["result"]["reason"], "\n")) : array_join($arguments["attempt"]["result"]["reason"], "\n");
         $body["result_state"] = $arguments["attempt"]["result"]["state"];
     }
     if ($arguments["attempt"]["error"]) {
@@ -24,7 +29,7 @@ function postmastery_smtp($arguments, $message) {
         if ($arguments["attempt"]["connection"]["remotemx"]) $body["connection_remotemx"] = $arguments["attempt"]["connection"]["remotemx"];
     }
     $body["sender"] = $message["sender"];
-    $body["recipient_localpart"] = $message["recipientaddress"]["localpart"];
+    $body["recipient_localpart"] = $redact ? "*****" : $message["recipientaddress"]["localpart"];
     $body["recipient_domain"] = $message["recipientaddress"]["domain"];
     $body["size"] = $message["size"];
     return $body;
