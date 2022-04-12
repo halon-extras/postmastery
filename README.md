@@ -1,10 +1,11 @@
-## postmastery_smtp(arguments, message)
+## postmastery_smtp(arguments, message, redact = false)
 This function converts a SMTP delivery result into a format that is compatible with Postmastery's Delivery Analytics product.
 
 **Params**
 
-- The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-z1) `$arguments` variable
-- The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-m1) `$message` variable
+- `$arguments` The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-z1) `$arguments` variable
+- `$message` The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-m1) `$message` variable
+- `$redact` If the email local parts should be redacted. The default is `false`
 
 **Returns**
 
