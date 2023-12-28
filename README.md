@@ -3,8 +3,8 @@ This function converts a SMTP delivery result into a format that is compatible w
 
 **Params**
 
-- `$arguments` The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-z1) `$arguments` variable
-- `$message` The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-m1) `$message` variable
+- `$arguments` The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-z1) `$arguments` variable **Required**
+- `$message` The [pre-defined](https://docs.halon.io/hsl/postdelivery.html#v-m1) `$message` variable **Required**
 - `$redact` If the recipient local part should be redacted. The default is `false`
 
 **Returns**
