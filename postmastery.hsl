@@ -3,7 +3,7 @@ function replace_localpart($str)
     return pcre_replace(''([^\s<]+)@([a-zA-Z0-9-.]{3,})'', "*****@$2", $str);
 }
 
-function postmastery_smtp($arguments, $message, $redact = false) {
+function postmastery_smtp($arguments, $message, $redact = false, $from = none, $subject = none) {
     $body = [];
     $body["type"] = "SMTP";
     $body["hostname"] = gethostname();
@@ -32,5 +32,7 @@ function postmastery_smtp($arguments, $message, $redact = false) {
     if (!$redact) $body["recipient_localpart"] = $message["recipientaddress"]["localpart"];
     $body["recipient_domain"] = $message["recipientaddress"]["domain"];
     $body["size"] = $message["size"];
+    if ($from) $body["from"] = $from;
+    if ($subject) $body["subject"] = $subject;
     return $body;
 }
